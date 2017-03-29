@@ -1,0 +1,13 @@
+#
+# Makefile for non-Microsoft compilers
+#
+
+all: MakeAll
+
+MakeAll:
+	$(MAKE) -C snap-core
+	
+clean:
+	$(MAKE) clean -C snap-core
+	$(MAKE) clean -C test
+	$(MAKE) clean -C tutorials

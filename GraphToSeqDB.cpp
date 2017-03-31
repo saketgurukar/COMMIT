@@ -50,13 +50,17 @@ void GraphToSeqDB::DBScan() {
 	for (TimeStampEdgeIDMap::iterator it = edgeTimeStampEdgeIDMap.begin(); it != edgeTimeStampEdgeIDMap.end(); it++) {
 		unsigned int edgeId = (*it).second;
 		if (!(*isEdgeVisitedMap.find(edgeId)).second) {
-			getMaximalGraph(edgeId);
+			PTimeNENet smallGraph = getMaximalGraph(edgeId, true);
+			if (smallGraph->GetEdges() >= 3) {
+				printDegreeSequence (smallGraph);
+				seqId_to_Graph_Map[id] = smallGraph;
+				id++;
+			}
 		}
 	}
 }
 
-void GraphToSeqDB::getNeighborEdges(list<int>& edgeids, int nodeId, long edgeTime,
-		map<int, int> scannedEdge) {
+void GraphToSeqDB::getNeighborEdges(list<int>& edgeids, int nodeId, long edgeTime, map<int, int> scannedEdge) {
 
 	TNodeEdgeNet<TSecTm, TSecTm>::TNodeI NI = graph->GetNI(nodeId);
 	for (int e = 0; e < NI.GetDeg(); e++) {
@@ -72,7 +76,7 @@ void GraphToSeqDB::getNeighborEdges(list<int>& edgeids, int nodeId, long edgeTim
 	}
 }
 
-void GraphToSeqDB::getMaximalGraph(int edgeId) {
+PTimeNENet& GraphToSeqDB::getMaximalGraph(int edgeId, bool deleteEdges) {
 
 	TimeStampEdgeIDMap edgetimeEdgeID;
 	list<int> edgeids;
@@ -121,16 +125,12 @@ void GraphToSeqDB::getMaximalGraph(int edgeId) {
 		getNeighborEdges(edgeids, ei.GetDstNId(), edgeTime, scannedEdge);
 	}
 
-	if (smallGraph->GetEdges() >= 3) {
-		printDegreeSequence(smallGraph);
-		seqId_to_Graph_Map[id] = smallGraph;
-		id++;
-	}
-
-	for (map<int, int>::iterator mit = scannedEdge.begin(); mit != scannedEdge.end(); mit++) {
-		long unsigned edgeid = (*mit).first;
-		(*isEdgeVisitedMap.find(edgeid)).second = 1;
-		graph->DelEdge(edgeid);
+	if (deleteEdges) {
+		for (map<int, int>::iterator mit = scannedEdge.begin(); mit != scannedEdge.end(); mit++) {
+			long unsigned edgeid = (*mit).first;
+			(*isEdgeVisitedMap.find(edgeid)).second = 1;
+			graph->DelEdge(edgeid);
+		}
 	}
 
 }

@@ -15,7 +15,7 @@ using namespace std;
 #include <cstdlib>
 #include <sstream>
 #include <utility>
-#define FILENAME "GraphSequence.txt"
+
 
 typedef multimap<unsigned int, unsigned int> TimeStampEdgeIDMap;
 typedef map<unsigned int, bool> IsEdgeVisitedMap;
@@ -32,6 +32,13 @@ class GraphToSeqDB {
 	string file;
 
 public:
+	GraphToSeqDB(int deltaTm) {
+		id = 0;
+		graph = TTimeNENet::New();
+		fseq.open(FILENAME, fstream::out);
+		deltaTime = deltaTm;
+		file = NULL;
+	}
 	GraphToSeqDB(string fle, int deltaTm) {
 		id = 0;
 		graph = TTimeNENet::New();
@@ -42,7 +49,7 @@ public:
 	void convertGraphToSequences();
 	void ReadTimeGraph(string file);
 	void DBScan();
-	void getMaximalGraph(int edgeId);
+	PTimeNENet& getMaximalGraph(int edgeId, bool deleteEdges);
 	void printDegreeSequence(PTimeNENet& graph);
 	void getNeighborEdges(list<int>& edgeids, int nodeId, long edgeTime, map<int, int> scannedEdge);
 	map<int, PTimeNENet>& getSeqIdToGraphMap() {

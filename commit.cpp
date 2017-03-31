@@ -3,8 +3,8 @@
 #include "SmartPtr.cpp"
 #include "CommitUtil.h"
 #include "GraphToSeqDB.h"
+#include "Motifs.h"
 #include "spanNfvm.h"
-#include "InducedGraph.h"
 
 #define NDEBUG 0
 
@@ -22,17 +22,11 @@ int main(int argc, char *argv[]) {
 	SmartPtr<GraphToSeqDB> graphToSeqDb(new GraphToSeqDB(file, deltaTime));
 	graphToSeqDb->convertGraphToSequences();
 
-	fstream fseq;
-	fseq.open("GraphSequence.txt", ios::in | ios::out);
-	if (!fseq.is_open()) {
-		cout << " No File Found \n";
-		exit(0);
-	}
-	InducedGraph *inGraph = new InducedGraph(deltaTime, top_k, graphToSeqDb);
+	Motifs *inGraph = new Motifs(deltaTime, top_k, graphToSeqDb->getSeqIdToGraphMap());
 	SpanFvm span(top_k, time, 1, motifSize, fvm, inGraph);
-	fseq.seekg(0, ios::beg);
+
 	Pairdata pairdata;
-	map<int, int> SeqIdToIndex;
+	fstream fseq = CommitUtil::openFile(FILENAME);
 	span.run(fseq, pairdata);
 	unsigned long endTime = CommitUtil::getTime();
 

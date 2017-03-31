@@ -16,3 +16,14 @@ static fstream& CommitUtil::openFile(string file) {
 	}
 	return fp;
 }
+
+static FILE& CommitUtil::writeMotifToFile(unsigned long name) {
+	ostringstream s;
+	s << "Mined_Motifs/" << name << ".txt";
+	FILE *F = fopen(s.str().c_str(), "wt");
+	if (F == NULL) {
+		cout << " Didnt open " << s.str();
+		exit(0);
+	}
+	return F;
+}

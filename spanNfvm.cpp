@@ -27,7 +27,7 @@ void stringToInt(string s, int&a, int &b,int &c,int &d){
 
 int printVec(vector<int> v){
 	cout<<"\t";
-	tr(v, vit){
+	traverse(v, vit){
 		cout<<(*vit)<<",";
 		vit++;
 		cout<<(*vit)<<" ";
@@ -207,7 +207,7 @@ int SpanFvm::featureVM(vector<int> minVector, vector<int>& db,vector<int>& items
 
 int mapToVec(map<string,bool>& OnceAdd, vector<int>& items){
 	int a1,b1;
-	tr(OnceAdd,it){
+	traverse(OnceAdd,it){
 		unsigned p,p1;
 		p = (it)->first.find(',');
 		stringstream val1((it)->first.substr(0, p));
@@ -231,17 +231,17 @@ int SpanFvm::INSGrow(Pairdata& pairdata,multimap<int,vector<int> >& I,vector<int
 
 	if(DEBUGTMP){
 		cout<<"\n Landmarks \n";
-		tr(I, iit){
+		traverse(I, iit){
 
 			cout<<(*iit).first<<"  ";
-			copy(all((*iit).second),ostream_iterator<int>(cout," "));
+			copy(beginToEnd((*iit).second),ostream_iterator<int>(cout," "));
 			cout<<"\n";
 		}
 		cout<<"\n";
 	}
 
 
-	tr(Ivec , mit){
+	traverse(Ivec , mit){
 
 		patEmbed.clear();
 		patEmbed=pidToPat[(*mit)];
@@ -334,10 +334,10 @@ int SpanFvm::INSGrow(Pairdata& pairdata,multimap<int,vector<int> >& I,vector<int
 
 	if(DEBUGTMP){
 		cout<<"\n **** Istar ***** \n";
-		tr(Istar, iit){
+		traverse(Istar, iit){
 
 			cout<<(*iit).first<<"  ";
-			copy(all((*iit).second),ostream_iterator<int>(cout," "));
+			copy(beginToEnd((*iit).second),ostream_iterator<int>(cout," "));
 			cout<<"\n";
 		}
 		cout<<"\n ********* ";
@@ -505,13 +505,6 @@ int SpanFvm::minFreVec(Pairdata& pairdata,multimap<int,vector<int> >& I,vector<i
 	}
 	int sizePDB=0;
 
-	if(DEBUG){
-		//	cout<<"\n --------------";
-		//printVec(items);
-		cout<<" Size "<<sz/2<<"\n";
-		//s	cout<<"\n --------------";
-	}
-
 
 	for(int i=0;i<=sz;i++){
 
@@ -566,7 +559,7 @@ int SpanFvm::getItems(multimap<int,vector<int> >& I,vector<int>& Ivec,Pairdata& 
 	int prevTime=0;
 
 	vector<int> patEmbed;
-	tr(Ivec, mit){
+	traverse(Ivec, mit){
 		patEmbed.clear();
 		patEmbed=pidToPat[(*mit)];
 
@@ -645,7 +638,7 @@ int SpanFvm::patternExtensionVec(vector<Embeddings>& topk, Pairdata& pairdata){
 	vector<Embeddings> globalK;
 	vector<Embeddings> projTopK;
 	int psize=0;
-	tr(topk,tpit){
+	traverse(topk,tpit){
 		minFreVec(pairdata,(*tpit).I,(*tpit).Ivec,(*tpit).pattern,globalK);  // EXTENSION OF SUBSEQUENCE
 		psize=(*tpit).pattern.size()/2 + 1;
 	}
@@ -663,7 +656,7 @@ int SpanFvm::patternExtensionVec(vector<Embeddings>& topk, Pairdata& pairdata){
 	if(DEBUGTMP){
 		cout<<"\n";
 		cout<<" ******************************* \n";
-		tr(globalK,lit){
+		traverse(globalK,lit){
 			cout<<"\n -------------- \n ";
 			cout<<(*lit).counts<<" ";
 			printVec((*lit).pattern);
@@ -674,8 +667,8 @@ int SpanFvm::patternExtensionVec(vector<Embeddings>& topk, Pairdata& pairdata){
 				cout<<"\n";
 			}*/
 
-			tr((*lit).Ivec,ivit){
-				copy(all(pidToPat[(*ivit)]),ostream_iterator<int>(cout," "));
+			traverse((*lit).Ivec,ivit){
+				copy(beginToEnd(pidToPat[(*ivit)]),ostream_iterator<int>(cout," "));
 				cout<<"\n";
 			}
 
@@ -702,14 +695,14 @@ int SpanFvm::patternExtensionVec(vector<Embeddings>& topk, Pairdata& pairdata){
 
 	if(DEBUGTMP){
 		cout<<"\n  After topk .. \n ";
-		tr(projTopK,lit){
+		traverse(projTopK,lit){
 			cout<<"\n -------------- \n ";
 			cout<<(*lit).counts<<" ";
 			printVec((*lit).pattern);
 
-			tr((*lit).I, iit){
+			traverse((*lit).I, iit){
 				cout<<(*iit).first<<"  ";
-				copy(all((*iit).second),ostream_iterator<int>(cout," "));
+				copy(beginToEnd((*iit).second),ostream_iterator<int>(cout," "));
 				cout<<"\n";
 			}
 			cout<<" -------------- \n ";
@@ -722,7 +715,7 @@ int SpanFvm::patternExtensionVec(vector<Embeddings>& topk, Pairdata& pairdata){
 
 	int index=0,del=0;
 
-	tr(projTopK,lit){
+	traverse(projTopK,lit){
 		if((*lit).pattern.size()>=6){
 			//	in.getTopKClosedGraphsVonline((*lit).Ivec,(*lit).counts,k,SeqIdToInd,pidToPat,idToGraphS);
 
@@ -779,7 +772,7 @@ int SpanFvm::getTopkVec(vector<Embeddings> & global,vector<Embeddings> & topk){
 	vector<int> chPattern,insidePattern;
 	map< int, closeness > closedtable;
 
-	tr(global,git){
+	traverse(global,git){
 
 
 		typeof(closedtable.begin()) it=closedtable.find((*git).counts);
@@ -816,9 +809,9 @@ int SpanFvm::getTopkVec(vector<Embeddings> & global,vector<Embeddings> & topk){
 
 	int i=0;
 
-	trr(closedtable,cit){
+	traverseReverse(closedtable,cit){
 		int m=0;
-		tr((*cit).second.ids, idit){
+		traverse((*cit).second.ids, idit){
 			if((*cit).second.in[m++]==true){
 				if(i<k)
 					topk.push_back(global[*idit]);
@@ -917,9 +910,7 @@ void SpanFvm::run(fstream& fp,Pairdata& pairdata ) {
 	getFloorN(minVec, Candidate_items);
 
 
-	if(DEBUG){
-		cout<<" Min vector is "<<minVec[0]<<"  "<<minVec[1]<<" size of candidate set "<<Candidate_items.size();
-	}
+
 
 	min_sup=id * fvm;
 
@@ -1035,14 +1026,14 @@ void SpanFvm::run(fstream& fp,Pairdata& pairdata ) {
 
 		if(DEBUGTMP){
 			cout<<"\n -------------- \n ";
-			tr(I, iit){
+			traverse(I, iit){
 				cout<<(*iit).first<<"  ";
-				copy(all((*iit).second),ostream_iterator<int>(cout," "));
+				copy(beginToEnd((*iit).second),ostream_iterator<int>(cout," "));
 				cout<<"\n";
 			}
 			cout<<" Compressed \n ";
-			tr(Ivec,ivit){
-				copy(all(pidToPat[(*ivit)]),ostream_iterator<int>(cout," "));
+			traverse(Ivec,ivit){
+				copy(beginToEnd(pidToPat[(*ivit)]),ostream_iterator<int>(cout," "));
 				cout<<"\n";
 			}
 
@@ -1063,28 +1054,19 @@ void SpanFvm::run(fstream& fp,Pairdata& pairdata ) {
 	patlen=0;
 
 	getTopkVec(LandmarksGlobalV,topkV);
-	if(DEBUG){
-		//	cout<<" ******************************* \n";
-		cout<<"\n";
-		tr(LandmarksGlobalV,lit){
-			cout<<(*lit).counts<<" ";
-			printVec((*lit).pattern);
-		}
-	}
-	//	exit(0);
 
 
 
 	if(DEBUGTMP){
 		cout<<"\n";
-		tr(topkV,lit){
+		traverse(topkV,lit){
 			cout<<"\n -------------- \n ";
 			cout<<(*lit).counts<<" ";
 			printVec((*lit).pattern);
 
 
-			tr((*lit).Ivec,ivit){
-				copy(all(pidToPat[(*ivit)]),ostream_iterator<int>(cout," "));
+			traverse((*lit).Ivec,ivit){
+				copy(beginToEnd(pidToPat[(*ivit)]),ostream_iterator<int>(cout," "));
 				cout<<"\n";
 			}
 
@@ -1122,14 +1104,14 @@ void SpanFvm::run(fstream& fp,Pairdata& pairdata ) {
 	if(DEBUGTMP){
 		cout<<" TOPK RESULT \n";
 		cout<<"\n";
-		tr(topkResultV,lit){
+		traverse(topkResultV,lit){
 
 			cout<<"\n -------------- \n ";
 			cout<<(*lit).counts<<" ";
 			printVec((*lit).pattern);
 
-			tr((*lit).Ivec,ivit){
-				copy(all(pidToPat[(*ivit)]),ostream_iterator<int>(cout," "));
+			traverse((*lit).Ivec,ivit){
+				copy(beginToEnd(pidToPat[(*ivit)]),ostream_iterator<int>(cout," "));
 				cout<<"\n";
 			}
 			cout<<" -------------- \n ";

@@ -4,11 +4,11 @@
 #define DEBUGG 0
 #define DEBUGTMP 0
 
-#define tr(c,it) for(typeof(c.begin()) it= c.begin(); it!=c.end(); it++)
+#define traverse(c,it) for(typeof(c.begin()) it= c.begin(); it!=c.end(); it++)
 
-#define trr(c,it) for(typeof(c.rbegin()) it= c.rbegin(); it!=c.rend(); it++)
+#define traverseReverse(c,it) for(typeof(c.rbegin()) it= c.rbegin(); it!=c.rend(); it++)
 
-#define all(c) (c).begin(),(c).end()
+#define beginToEnd(c) (c).begin(),(c).end()
 
 #include<iostream>
 using namespace std;
@@ -33,7 +33,7 @@ using namespace std;
 
 
 
-#include "InducedGraph.h"
+#include "Motifs.h"
 
 
 //typedef pair<int,int> edge;
@@ -115,12 +115,12 @@ class SpanFvm {
 	map< int, map<int,int>  > SeqIdToInd;
 	int nextSup;
 public:
-	InducedGraph *in;
+	Motifs *in;
 
 	SpanFvm(){
 
 	}
-	SpanFvm(int m,int p,int min,int len,double f,InducedGraph *ind){
+	SpanFvm(int m,int p,int min,int len,double f,Motifs *ind){
 		min_sup=min;		k=m;
 		ppid=1;
 		Sptime=p;
